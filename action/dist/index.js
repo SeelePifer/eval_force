@@ -133095,8 +133095,10 @@ async function run() {
     const client = new import_artifact.DefaultArtifactClient();
     await client.uploadArtifact("evalforge-report", [reportPath], process.cwd());
   }
-  if (exitCode !== 0) {
-    core.setFailed(`EvalForge gate failed with exit code ${exitCode}`);
+  if (exitCode === 1) {
+    core.setFailed("EvalForge gate failed");
+  } else if (exitCode !== 0) {
+    core.setFailed(`EvalForge failed with exit code ${exitCode}`);
   }
 }
 run().catch((error) => {

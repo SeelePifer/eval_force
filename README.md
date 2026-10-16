@@ -83,7 +83,7 @@ Case quality is the mean of the scorers that apply:
 
 An optional LLM judge can be turned on in the config. Its score is stored on the case and is not mixed into the gate.
 
-The run manifest records the dataset SHA-256, each prompt hash, the pricing-table version, the seed, and the temperature. The hash is computed from the case objects in file order, serialized as canonical JSON.
+The run manifest records the dataset SHA-256, each prompt hash, the pricing-table version, the seed, and the temperature. The hash covers the case objects and every referenced corpus, serialized as one canonical JSON document. A baseline is accepted only when its dataset hash matches, and every current target must exist in that baseline.
 
 ## API
 

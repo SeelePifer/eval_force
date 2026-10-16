@@ -20,8 +20,16 @@ def evaluate_gate(
     gate: GateConfig,
     *,
     target_name: str,
+    baseline_missing: bool = False,
 ) -> GateVerdict:
     reasons: list[GateReason] = []
+    if baseline_missing:
+        reasons.append(
+            GateReason(
+                code="baseline_target_missing",
+                message=f"{target_name} has no matching target in the baseline",
+            )
+        )
     if summary.quality + _EPSILON < gate.quality_min:
         reasons.append(
             GateReason(
@@ -41,7 +49,7 @@ def evaluate_gate(
                 ),
             )
         )
-    if baseline is not None:
+    if baseline is not None and not baseline_missing:
         drop = baseline.quality - summary.quality
         if drop > gate.quality_drop_max + _EPSILON:
             reasons.append(

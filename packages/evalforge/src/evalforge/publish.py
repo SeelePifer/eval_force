@@ -22,14 +22,14 @@ def publish_run(
     run: EvalRun,
     report_html: str,
 ) -> str:
-    authored, _cases, digest = load_authored_cases(dataset_path)
+    authored, _cases, corpora, digest = load_authored_cases(dataset_path)
     if digest != run.manifest.dataset_sha256:
         raise EvalError("results dataset hash does not match the dataset file")
     headers = {"Authorization": f"Bearer {api_key}"}
     with httpx.Client(base_url=api_url.rstrip("/"), headers=headers, timeout=30) as client:
         dataset_response = client.post(
             "/v1/datasets",
-            json={"name": dataset_name_from_path(dataset_path), "cases": authored},
+            json={"name": dataset_name_from_path(dataset_path), "cases": authored, "corpora": corpora},
         )
         _raise_for_status(dataset_response, "dataset publish failed")
         run_response = client.post(

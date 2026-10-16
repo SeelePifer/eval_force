@@ -29,13 +29,13 @@ async def create_dataset(payload: DatasetIn, request: Request) -> dict[str, str]
             Case.model_validate(case)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    digest = dataset_sha256(payload.cases)
+    digest = dataset_sha256(payload.cases, payload.corpora)
     pool: asyncpg.Pool = request.app.state.pool
     async with pool.acquire() as connection:
         row = await connection.fetchrow(
             """
-            INSERT INTO datasets (id, name, sha256, cases)
-            VALUES ($1, $2, $3, $4::jsonb)
+            INSERT INTO datasets (id, name, sha256, cases, corpora)
+            VALUES ($1, $2, $3, $4::jsonb, $5::jsonb)
             ON CONFLICT (sha256) DO UPDATE SET name = EXCLUDED.name
             RETURNING id
             """,
@@ -43,6 +43,7 @@ async def create_dataset(payload: DatasetIn, request: Request) -> dict[str, str]
             payload.name,
             digest,
             json.dumps(payload.cases),
+            json.dumps(payload.corpora),
         )
     return {"id": str(row["id"]), "sha256": digest}
 
@@ -55,6 +56,8 @@ async def create_run(payload: RunIn, request: Request) -> dict[str, str]:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     if run.manifest.dataset_sha256 != payload.dataset_sha256:
         raise HTTPException(status_code=422, detail="dataset hash does not match the results manifest")
+    if payload.passed != run.passed:
+        raise HTTPException(status_code=422, detail="passed does not match the results")
     pool: asyncpg.Pool = request.app.state.pool
     run_id = uuid4()
     async with pool.acquire() as connection:
@@ -65,10 +68,10 @@ async def create_run(payload: RunIn, request: Request) -> dict[str, str]:
             """,
             run_id,
             payload.dataset_sha256,
-            json.dumps(payload.manifest),
+            json.dumps(run.manifest.model_dump()),
             json.dumps(run.model_dump()),
             payload.report_html,
-            payload.passed,
+            run.passed,
         )
     return {"id": str(run_id)}
 

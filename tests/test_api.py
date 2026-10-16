@@ -7,6 +7,8 @@ import asyncpg
 import pytest
 from fastapi.testclient import TestClient
 
+from evalforge.dataset import load_authored_cases
+
 ROOT = Path(__file__).parents[1]
 
 
@@ -32,15 +34,19 @@ def test_publish_list_report_and_compare(client: TestClient) -> None:
     denied = client.get("/v1/runs")
     assert denied.status_code == 401
     headers = {"Authorization": "Bearer test-key"}
-    cases = [
-        json.loads(line)
-        for line in (ROOT / "datasets" / "evalforge-qa-v1" / "cases.jsonl").read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    created = client.post("/v1/datasets", headers=headers, json={"name": "evalforge-qa-v1", "cases": cases})
+    cases, _parsed, corpora, _digest = load_authored_cases(ROOT / "datasets" / "evalforge-qa-v1" / "cases.jsonl")
+    created = client.post(
+        "/v1/datasets",
+        headers=headers,
+        json={"name": "evalforge-qa-v1", "cases": cases, "corpora": corpora},
+    )
     assert created.status_code == 200
     digest = created.json()["sha256"]
-    again = client.post("/v1/datasets", headers=headers, json={"name": "evalforge-qa-v1", "cases": cases})
+    again = client.post(
+        "/v1/datasets",
+        headers=headers,
+        json={"name": "evalforge-qa-v1", "cases": cases, "corpora": corpora},
+    )
     assert again.json()["sha256"] == digest
 
     from evalforge.cli import main
@@ -89,6 +95,19 @@ def test_publish_list_report_and_compare(client: TestClient) -> None:
     assert body["cost_delta"] > 0
     assert body["quality_delta"] == 0
     assert len(body["cases"]) == 6
+
+    lied = client.post(
+        "/v1/runs",
+        headers=headers,
+        json={
+            "dataset_sha256": digest,
+            "manifest": results["manifest"],
+            "results": results,
+            "report_html": report,
+            "passed": not results["passed"],
+        },
+    )
+    assert lied.status_code == 422
 
 
 async def _truncate() -> None:

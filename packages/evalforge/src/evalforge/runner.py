@@ -58,10 +58,15 @@ def execute_run(
     baseline_path: Path | None = None,
 ) -> EvalRun:
     dataset_path = resolve_path(config_dir, config.dataset)
-    _authored, cases, dataset_hash = load_authored_cases(dataset_path)
+    _authored, cases, _corpora, dataset_hash = load_authored_cases(dataset_path)
     dataset_dir = dataset_path.parent
     pricing = load_pricing(resolve_path(config_dir, config.pricing))
     baseline = load_run(baseline_path) if baseline_path else None
+    if baseline is not None and baseline.manifest.dataset_sha256 != dataset_hash:
+        raise EvalError(
+            "baseline dataset hash does not match the current dataset "
+            f"({baseline.manifest.dataset_sha256} != {dataset_hash})"
+        )
     judge_provider = _build_judge(config, config_dir) if config.judge.enabled else None
     target_results: list[TargetResult] = []
     manifests: list[TargetManifest] = []
@@ -156,7 +161,13 @@ def _run_target(
     ]
     summary = _summarize(case_results)
     baseline_summary = _baseline_summary(baseline, target.name)
-    verdict = evaluate_gate(summary, baseline_summary, gate, target_name=target.name)
+    verdict = evaluate_gate(
+        summary,
+        baseline_summary,
+        gate,
+        target_name=target.name,
+        baseline_missing=baseline is not None and baseline_summary is None,
+    )
     return TargetResult(
         name=target.name,
         model=target.model,

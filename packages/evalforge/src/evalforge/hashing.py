@@ -11,8 +11,8 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def dataset_sha256(cases: list[Any]) -> str:
-    payload = "\n".join(canonical_json(case) for case in cases)
+def dataset_sha256(cases: list[Any], corpora: dict[str, list[Any]] | None = None) -> str:
+    payload = canonical_json({"cases": cases, "corpora": corpora or {}})
     return sha256_text(payload)
 
 

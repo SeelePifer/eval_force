@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class DatasetIn(BaseModel):
     name: str = Field(min_length=1)
     cases: list[dict[str, Any]] = Field(min_length=1)
+    corpora: dict[str, list[dict[str, Any]]] = Field(default_factory=dict)
 
 
 class RunIn(BaseModel):

@@ -1,5 +1,9 @@
+import json
 from pathlib import Path
 
+import pytest
+
+from evalforge.errors import EvalError
 from evalforge.models import EvalConfig
 from evalforge.runner import execute_run, load_config
 
@@ -58,3 +62,27 @@ def test_optional_judge_is_stored_apart_from_quality(tmp_path: Path) -> None:
     assert sample.judge_score == 0.25
     assert sample.scores.quality == 1
     assert run.manifest.judge_rubric_version == "v1"
+
+
+def test_baseline_must_use_the_same_dataset(tmp_path: Path) -> None:
+    config, config_dir = load_config(CONFIG)
+    run = execute_run(config=config, config_dir=config_dir, baseline_path=None)
+    payload = run.model_dump()
+    payload["manifest"]["dataset_sha256"] = "0" * 64
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(EvalError, match="baseline dataset hash"):
+        execute_run(config=config, config_dir=config_dir, baseline_path=baseline)
+
+
+def test_renamed_target_fails_the_baseline_gate(tmp_path: Path) -> None:
+    config, config_dir = load_config(CONFIG)
+    run = execute_run(config=config, config_dir=config_dir, baseline_path=None)
+    payload = run.model_dump()
+    payload["targets"] = [target for target in payload["targets"] if target["name"] != "support-v1"]
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps(payload), encoding="utf-8")
+    gated = execute_run(config=config, config_dir=config_dir, baseline_path=baseline)
+    missing = next(target for target in gated.targets if target.name == "support-v1")
+    assert not gated.passed
+    assert any(reason.code == "baseline_target_missing" for reason in missing.gate.reasons)

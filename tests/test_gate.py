@@ -33,6 +33,12 @@ def test_gate_blocks_quality_drop_cost_increase_and_latency() -> None:
     assert not verdict.passed
 
 
+def test_gate_fails_when_the_baseline_has_no_matching_target() -> None:
+    verdict = evaluate_gate(_summary(), None, GateConfig(), target_name="support-v3", baseline_missing=True)
+    assert [reason.code for reason in verdict.reasons] == ["baseline_target_missing"]
+    assert not verdict.passed
+
+
 def test_gate_blocks_cost_when_baseline_was_free() -> None:
     verdict = evaluate_gate(
         _summary(cost_usd=0.01),

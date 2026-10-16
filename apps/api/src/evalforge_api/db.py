@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS runs (
 );
 
 CREATE INDEX IF NOT EXISTS runs_created_at_idx ON runs (created_at DESC);
+
+ALTER TABLE datasets ADD COLUMN IF NOT EXISTS corpora JSONB NOT NULL DEFAULT '{}'::jsonb;
 """
 
 
