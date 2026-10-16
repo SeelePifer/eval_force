@@ -1,0 +1,6 @@
+{"id": "qa-refund-window", "type": "qa", "input": "What is the refund window?", "expected": "Refunds are allowed within 30 days."}
+{"id": "qa-shipping-sla", "type": "qa", "input": "How long does standard shipping take?", "expected": "Standard shipping arrives in 5 business days."}
+{"id": "qa-support-email", "type": "qa", "input": "What is the support email?", "expected": "Email help@northwind.example for order support."}
+{"id": "rag-refund", "type": "rag", "input": "What is the refund window for a return?", "expected": "Refunds are allowed within 30 days.", "corpus": "corpus.jsonl", "expected_chunk_ids": ["refund-window"]}
+{"id": "rag-shipping", "type": "rag", "input": "What is the standard shipping arrival time?", "expected": "Standard shipping arrives in 5 business days.", "corpus": "corpus.jsonl", "expected_chunk_ids": ["shipping-sla"]}
+{"id": "tool-refund-policy", "type": "tools", "input": "Look up the refund policy.", "expected": "Refunds are allowed within 30 days.", "expected_calls": [{"name": "lookup_policy", "arguments_subset": {"topic": "refund"}}], "tool_stubs": {"lookup_policy": {"refund": "Refunds are allowed within 30 days."}}}

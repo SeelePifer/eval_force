@@ -1,0 +1,11 @@
+{
+  "name": "evalforge",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev:web": "pnpm --filter @evalforge/web dev",
+    "build:web": "pnpm --filter @evalforge/web build",
+    "build:action": "pnpm --filter @evalforge/action build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

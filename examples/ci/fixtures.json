@@ -1,0 +1,48 @@
+{
+  "support-v1": {
+    "qa-refund-window": {"text": "Refunds are allowed within 30 days.", "prompt_tokens": 20, "completion_tokens": 8, "latency_ms": 100},
+    "qa-shipping-sla": {"text": "Standard shipping arrives in 5 business days.", "prompt_tokens": 20, "completion_tokens": 8, "latency_ms": 110},
+    "qa-support-email": {"text": "Email help@northwind.example for order support.", "prompt_tokens": 20, "completion_tokens": 8, "latency_ms": 120},
+    "rag-refund": {"text": "Refunds are allowed within 30 days.", "prompt_tokens": 20, "completion_tokens": 8, "latency_ms": 130},
+    "rag-shipping": {"text": "Standard shipping arrives in 5 business days.", "prompt_tokens": 20, "completion_tokens": 8, "latency_ms": 140},
+    "tool-refund-policy": {
+      "steps": [
+        {
+          "tool_calls": [{"name": "lookup_policy", "arguments": {"topic": "refund"}}],
+          "prompt_tokens": 30,
+          "completion_tokens": 10,
+          "latency_ms": 80
+        },
+        {
+          "text": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 90
+        }
+      ]
+    }
+  },
+  "support-v2": {
+    "qa-refund-window": {"text": "Refunds are allowed within 30 days.", "prompt_tokens": 28, "completion_tokens": 10, "latency_ms": 150},
+    "qa-shipping-sla": {"text": "Standard shipping arrives in 5 business days.", "prompt_tokens": 28, "completion_tokens": 10, "latency_ms": 160},
+    "qa-support-email": {"text": "Email help@northwind.example for order support.", "prompt_tokens": 28, "completion_tokens": 10, "latency_ms": 170},
+    "rag-refund": {"text": "Refunds are allowed within 30 days.", "prompt_tokens": 28, "completion_tokens": 10, "latency_ms": 180},
+    "rag-shipping": {"text": "Standard shipping arrives in 5 business days.", "prompt_tokens": 28, "completion_tokens": 10, "latency_ms": 190},
+    "tool-refund-policy": {
+      "steps": [
+        {
+          "tool_calls": [{"name": "lookup_policy", "arguments": {"topic": "refund"}}],
+          "prompt_tokens": 36,
+          "completion_tokens": 12,
+          "latency_ms": 100
+        },
+        {
+          "text": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 110
+        }
+      ]
+    }
+  }
+}

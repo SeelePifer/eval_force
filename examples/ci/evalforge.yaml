@@ -1,0 +1,22 @@
+dataset: ../../datasets/evalforge-qa-v1/cases.jsonl
+pricing: pricing.yaml
+seed: 0
+temperature: 0
+top_k: 2
+baseline: baseline.json
+gate:
+  quality_min: 0.8
+  quality_drop_max: 0.05
+  cost_increase_max: 0.2
+  latency_p95_ms: 4000
+targets:
+  - name: support-v1
+    provider: mock
+    model: mock-small
+    prompt: prompts/v1.txt
+    fixtures: fixtures.json
+  - name: support-v2
+    provider: mock
+    model: mock-small
+    prompt: prompts/v2.txt
+    fixtures: fixtures.json

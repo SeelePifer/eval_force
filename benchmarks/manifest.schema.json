@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evalforge.local/schemas/run.json",
+  "title": "EvalForge run",
+  "type": "object",
+  "required": ["manifest", "passed", "targets"],
+  "additionalProperties": false,
+  "properties": {
+    "passed": { "type": "boolean" },
+    "manifest": {
+      "type": "object",
+      "required": ["dataset_sha256", "pricing_version", "seed", "temperature", "targets"],
+      "properties": {
+        "dataset_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "pricing_version": { "type": "string" },
+        "seed": { "type": "integer" },
+        "temperature": { "type": "number" },
+        "judge_rubric_version": { "type": ["string", "null"] },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "model", "provider", "prompt_sha256", "temperature"],
+            "properties": {
+              "name": { "type": "string" },
+              "model": { "type": "string" },
+              "provider": { "type": "string" },
+              "prompt_sha256": { "type": "string" },
+              "temperature": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "model", "prompt_sha256", "summary", "gate", "cases"],
+        "properties": {
+          "summary": {
+            "type": "object",
+            "required": ["quality", "cost_usd", "prompt_tokens", "completion_tokens", "latency_p95_ms"],
+            "properties": {
+              "quality": { "type": "number" },
+              "cost_usd": { "type": "number" },
+              "prompt_tokens": { "type": "integer" },
+              "completion_tokens": { "type": "integer" },
+              "latency_p95_ms": { "type": "number" },
+              "retrieval_recall": { "type": ["number", "null"] },
+              "tool_match": { "type": ["number", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

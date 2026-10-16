@@ -1,0 +1,16 @@
+name: EvalForge
+description: Run a dataset against prompt and model targets and fail the job if the release gate does not pass.
+inputs:
+  config:
+    description: Path to the EvalForge YAML config
+    required: true
+  baseline:
+    description: Optional baseline results JSON. Overrides the baseline set in the config.
+    required: false
+  out_dir:
+    description: Directory for evalforge-results.json and evalforge-report.html
+    required: false
+    default: out
+runs:
+  using: node20
+  main: dist/index.js

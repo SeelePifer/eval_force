@@ -1,0 +1,358 @@
+{
+  "manifest": {
+    "dataset_sha256": "aff59e9a86b6c01342cd242fd17bc47df42cce5c076e9f4fd3feda2287cebf2c",
+    "pricing_version": "2026-01",
+    "seed": 0,
+    "temperature": 0.0,
+    "judge_rubric_version": null,
+    "targets": [
+      {
+        "name": "support-v1",
+        "model": "mock-small",
+        "provider": "mock",
+        "prompt_sha256": "31c797a102920ae2704f14b1732d29e37666d7a51df5875c673dcb2e1a7bc57e",
+        "temperature": 0.0
+      },
+      {
+        "name": "support-v2",
+        "model": "mock-small",
+        "provider": "mock",
+        "prompt_sha256": "f50b31cf0ce901fd419af12a2a30612b50eded8f7aa788a9285517276581f04d",
+        "temperature": 0.0
+      }
+    ]
+  },
+  "passed": true,
+  "targets": [
+    {
+      "name": "support-v1",
+      "model": "mock-small",
+      "prompt_sha256": "31c797a102920ae2704f14b1732d29e37666d7a51df5875c673dcb2e1a7bc57e",
+      "summary": {
+        "quality": 1.0,
+        "cost_usd": 0.0000573,
+        "prompt_tokens": 150,
+        "completion_tokens": 58,
+        "latency_p95_ms": 170.0,
+        "retrieval_recall": 1.0,
+        "tool_match": 1.0
+      },
+      "gate": {
+        "passed": true,
+        "reasons": []
+      },
+      "cases": [
+        {
+          "case_id": "qa-refund-window",
+          "case_type": "qa",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 100.0,
+          "cost_usd": 7.8e-6,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "qa-shipping-sla",
+          "case_type": "qa",
+          "output": "Standard shipping arrives in 5 business days.",
+          "expected": "Standard shipping arrives in 5 business days.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 110.0,
+          "cost_usd": 7.8e-6,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "qa-support-email",
+          "case_type": "qa",
+          "output": "Email help@northwind.example for order support.",
+          "expected": "Email help@northwind.example for order support.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 120.0,
+          "cost_usd": 7.8e-6,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "rag-refund",
+          "case_type": "rag",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 130.0,
+          "cost_usd": 7.8e-6,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": 1.0,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [
+            "refund-window",
+            "shipping-sla"
+          ],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "rag-shipping",
+          "case_type": "rag",
+          "output": "Standard shipping arrives in 5 business days.",
+          "expected": "Standard shipping arrives in 5 business days.",
+          "prompt_tokens": 20,
+          "completion_tokens": 8,
+          "latency_ms": 140.0,
+          "cost_usd": 7.8e-6,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": 1.0,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [
+            "shipping-sla",
+            "refund-window"
+          ],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "tool-refund-policy",
+          "case_type": "tools",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 50,
+          "completion_tokens": 18,
+          "latency_ms": 170.0,
+          "cost_usd": 0.000018299999999999998,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": 1.0
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [
+            {
+              "name": "lookup_policy",
+              "arguments": {
+                "topic": "refund"
+              }
+            }
+          ],
+          "judge_score": null
+        }
+      ]
+    },
+    {
+      "name": "support-v2",
+      "model": "mock-small",
+      "prompt_sha256": "f50b31cf0ce901fd419af12a2a30612b50eded8f7aa788a9285517276581f04d",
+      "summary": {
+        "quality": 1.0,
+        "cost_usd": 0.0000738,
+        "prompt_tokens": 204,
+        "completion_tokens": 72,
+        "latency_p95_ms": 210.0,
+        "retrieval_recall": 1.0,
+        "tool_match": 1.0
+      },
+      "gate": {
+        "passed": true,
+        "reasons": []
+      },
+      "cases": [
+        {
+          "case_id": "qa-refund-window",
+          "case_type": "qa",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 150.0,
+          "cost_usd": 0.0000102,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "qa-shipping-sla",
+          "case_type": "qa",
+          "output": "Standard shipping arrives in 5 business days.",
+          "expected": "Standard shipping arrives in 5 business days.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 160.0,
+          "cost_usd": 0.0000102,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "qa-support-email",
+          "case_type": "qa",
+          "output": "Email help@northwind.example for order support.",
+          "expected": "Email help@northwind.example for order support.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 170.0,
+          "cost_usd": 0.0000102,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "rag-refund",
+          "case_type": "rag",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 180.0,
+          "cost_usd": 0.0000102,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": 1.0,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [
+            "refund-window",
+            "shipping-sla"
+          ],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "rag-shipping",
+          "case_type": "rag",
+          "output": "Standard shipping arrives in 5 business days.",
+          "expected": "Standard shipping arrives in 5 business days.",
+          "prompt_tokens": 28,
+          "completion_tokens": 10,
+          "latency_ms": 190.0,
+          "cost_usd": 0.0000102,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": 1.0,
+            "tool_match": null
+          },
+          "retrieved_chunk_ids": [
+            "shipping-sla",
+            "refund-window"
+          ],
+          "tool_calls": [],
+          "judge_score": null
+        },
+        {
+          "case_id": "tool-refund-policy",
+          "case_type": "tools",
+          "output": "Refunds are allowed within 30 days.",
+          "expected": "Refunds are allowed within 30 days.",
+          "prompt_tokens": 64,
+          "completion_tokens": 22,
+          "latency_ms": 210.0,
+          "cost_usd": 0.0000228,
+          "scores": {
+            "normalized_exact": 1.0,
+            "contains": 1.0,
+            "token_f1": 1.0,
+            "answer_quality": 1.0,
+            "quality": 1.0,
+            "retrieval_recall": null,
+            "tool_match": 1.0
+          },
+          "retrieved_chunk_ids": [],
+          "tool_calls": [
+            {
+              "name": "lookup_policy",
+              "arguments": {
+                "topic": "refund"
+              }
+            }
+          ],
+          "judge_score": null
+        }
+      ]
+    }
+  ]
+}

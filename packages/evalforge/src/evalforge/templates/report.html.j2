@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>EvalForge report</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1c1915;
+        --muted: #5c564c;
+        --line: #e4ddd2;
+        --paper: #f7f4ef;
+        --pass: #1f7a4d;
+        --fail: #a33b32;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+      }
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+      }
+      h1, h2 { font-weight: 600; letter-spacing: -0.02em; }
+      h1 { margin-bottom: 8px; }
+      .meta { color: var(--muted); margin-bottom: 24px; }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .pass { color: var(--pass); background: #e5f5ec; }
+      .fail { color: var(--fail); background: #fdeceb; }
+      table { width: 100%; border-collapse: collapse; background: white; margin: 12px 0 28px; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+      .num { text-align: right; font-variant-numeric: tabular-nums; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>EvalForge report</h1>
+      <p class="meta">
+        Dataset <code>{{ run.manifest.dataset_sha256 }}</code><br />
+        Pricing {{ run.manifest.pricing_version }} · seed {{ run.manifest.seed }} · temperature {{ run.manifest.temperature }}
+        {% if run.manifest.judge_rubric_version %} · judge rubric {{ run.manifest.judge_rubric_version }}{% endif %}
+      </p>
+      <p>
+        {% if run.passed %}
+        <span class="badge pass">Gate passed</span>
+        {% else %}
+        <span class="badge fail">Gate failed</span>
+        {% endif %}
+      </p>
+
+      <h2>Targets</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Target</th>
+            <th>Gate</th>
+            <th class="num">Quality</th>
+            <th class="num">Cost (USD)</th>
+            <th class="num">p95 (ms)</th>
+            <th class="num">Prompt tokens</th>
+            <th class="num">Completion tokens</th>
+            <th class="num">Retrieval</th>
+            <th class="num">Tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for target in run.targets %}
+          <tr>
+            <td>{{ target.name }}<br /><code>{{ target.model }}</code></td>
+            <td class="{{ 'pass' if target.gate.passed else 'fail' }}">
+              {{ "passed" if target.gate.passed else "failed" }}
+              {% for reason in target.gate.reasons %}<br />{{ reason.message }}{% endfor %}
+            </td>
+            <td class="num">{{ target.summary.quality | quality }}</td>
+            <td class="num">{{ target.summary.cost_usd | usd }}</td>
+            <td class="num">{{ target.summary.latency_p95_ms | ms }}</td>
+            <td class="num">{{ target.summary.prompt_tokens }}</td>
+            <td class="num">{{ target.summary.completion_tokens }}</td>
+            <td class="num">{{ target.summary.retrieval_recall | optional }}</td>
+            <td class="num">{{ target.summary.tool_match | optional }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% for target in run.targets %}
+      <h2>{{ target.name }}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Case</th>
+            <th>Expected</th>
+            <th>Output</th>
+            <th class="num">Quality</th>
+            <th class="num">Cost</th>
+            <th class="num">Latency</th>
+            <th class="num">Judge</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for case in target.cases %}
+          <tr>
+            <td><code>{{ case.case_id }}</code><br />{{ case.case_type }}</td>
+            <td>{{ case.expected }}</td>
+            <td>{{ case.output }}</td>
+            <td class="num">{{ case.scores.quality | quality }}</td>
+            <td class="num">{{ case.cost_usd | usd }}</td>
+            <td class="num">{{ case.latency_ms | ms }}</td>
+            <td class="num">{{ case.judge_score | optional }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    </main>
+  </body>
+</html>
